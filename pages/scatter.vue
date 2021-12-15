@@ -2,7 +2,7 @@
   <div class="page-wrapper">
     <p class="mouse">{{mousePos}}</p>
     <div class="scattered-images">
-      <figure v-for="image, index in images" :key="index" @mouseup="nowId=-1" @mousedown="selectId($event,index)">
+      <figure v-for="image, index in images" :key="index" :style="imageCss(image)" @mouseup="nowId=-1" @mousedown="selectId($event,index)">
         <img :src="`/img/${image.path}`" alt="">
       </figure>
     </div>
@@ -26,28 +26,27 @@ export default {
         y: 0
       },
       images: newImages,
-      allFigures: [],
     }
   },
-  watch:{
+	watch:{
 		mousePos(){
 			// console.log(this.mousePos.x, this.mousePos.y)
 			if (this.nowId != -1){
-        console.log('this on', this.allFigures[this.nowId]);
-				this.allFigures[this.nowId].style.left = this.mousePos.x - this.startMousePos.x
-        this.allFigures[this.nowId].style.top = this.mousePos.y- this.startMousePos.y
+				this.images[this.nowId].x = this.mousePos.x - this.startMousePos.x
+				this.images[this.nowId].y = this.mousePos.y - this.startMousePos.y
+				
 			}
 		}
 	},
   methods: {
-		// imageCss (i) {
-    //   // console.log('i', i);
-		// 	return {
-		// 		left: i.x,
-		// 		top: i.y,
-		// 	}
-		// },
+		imageCss (i) {
+			return {
+				left: i.x +'px',
+				top: i.y +'px',
+			}
+		},
 		selectId(evt, id){
+      console.log('Mouse down!!');
 			this.nowId = id
 			this.startMousePos = {
 				x: evt.offsetX,
@@ -58,59 +57,59 @@ export default {
 		},
   
     scatterImages() {
-      this.allFigures = document.querySelectorAll('figure')
       console.log('scattering...');
+      const allFigures = document.querySelectorAll('figure')
+      allFigures.forEach(figure => {
+        // set some random size and rotation vars
+        const randomSize = 1 + Math.random()
+        const randomRotation = Math.random() * 360
+        // apply those to the img tag inside the current image
+        figure.childNodes[0].style.transform = `scale(${randomSize}) rotate(${randomRotation}deg)`
+      })
+    }
+  },
+  beforeMount() {
+      // calculate grid sizes based on window
       const gridWidth = window.innerWidth / 6
       const gridHeight = window.innerHeight / 6
       let currentFigure = 0
+      // Set x and y properties on all images:
       // for each row...
       for (let i = 0; i < window.innerHeight / gridHeight; i++) {
         // for each column
         for(let j = 0; j < window.innerWidth / gridWidth; j++) {
           // until we run out of images
-          if(currentFigure < this.allFigures.length) {
-            // console.log('x, y', gridWidth * j, gridHeight * i)
+          if(currentFigure < this.images.length) {
             // add position to current image
-            this.allFigures[currentFigure].style.top = gridHeight * i+ 'px'
-            this.allFigures[currentFigure].style.left = gridWidth * j + 'px'
-            // create random size and rotation variables
-            const randomSize = 1 + Math.random()
-            const randomRotation = Math.random() * 360
-            // apply those to the img tag inside the current image
-            this.allFigures[currentFigure].childNodes[0].style.transform = `scale(${randomSize}) rotate(${randomRotation}deg)`
+            this.$set(this.images[currentFigure], 'x', Math.floor(gridWidth * j))
+            this.$set(this.images[currentFigure], 'y', Math.floor(gridHeight * i))
             currentFigure++
-          } else {
-            return
-          }
+          } 
         }
       }
-      this.allFigures.forEach((image, index) => {
-     
-      })
-    }
   },
   mounted() {
-    console.log('I have mounted')
     this.scatterImages()
+
     window.onmousemove = (evt) => {
       this.mousePos = {
         x: evt.pageX,
         y: evt.pageY
       }
     }
-
-    window.onmouseup = (evt) => {
-      this.nowId = -1
-    }
   },
-
 
 }
 </script>
 
-<style scoped>
+<style>
+html {
+  overflow: hidden;
+}
+
 body {
   @apply p-0;
+  overflow: hidden;
 }
 
 h1 {
@@ -139,16 +138,22 @@ figure {
 figure img {
   transition: border .2s;
   border: 5px solid transparent;
+  pointer-events: none;
 }
 
 figure  {
   mix-blend-mode: difference;
   cursor: grab;
+  user-select: none;
 }
 
+  figure:hover {
+    z-index: 999;
+  }
 figure:hover img{
   border: 5px solid black;
 }
+
 
 .modal {
   position: fixed;
