@@ -112,23 +112,6 @@ body {
   overflow: hidden;
 }
 
-h1 {
-  @apply pb-4;
-  font-size: clamp(1rem, 10vw, 10rem);
-}
-
-.scattered-images {
-  @apply grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4;
-}
-
-.active {
-  background-color: yellow;
-}
-
-span.thing {
-  text-decoration: underline;
-}
-
 figure {
   position: absolute;
   max-width: 200px;
@@ -155,33 +138,8 @@ figure:hover img{
 }
 
 
-.modal {
-  position: fixed;
-  background-color: gray;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border: 10px solid red;
-  display: grid;
-  place-content: center;
-}
 
 
-.modal .close-button {
-  position: fixed;
-  top: 2rem;
-  right: 2rem;
-  font-size: 4rem;
-  line-height: 1;
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
 
 .mouse {
   position: fixed;
