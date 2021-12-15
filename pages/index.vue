@@ -1,6 +1,6 @@
 <template>
   <div class="page-wrapper">
-    <h1>{{title}}</h1>
+    <!-- <h1>{{title}}</h1> -->
     <div class="grid-list">
       <figure v-for="image, index in images" :key="index" :class="image.size">
         <img :src="`/img/${image.path}`" alt="" @click="handleImageClick(`/img/${image.path}`)">
@@ -18,11 +18,12 @@
 
 <script>
 const images = require('~/assets/data/images.json')
+const newImages = require('~/assets/data/newImages.json')
 export default {
   data() {
     return {
       title: 'My things',
-      images: images,
+      images: newImages,
       modalImage: null,
       modalIsShowing: false,
       color: '',
