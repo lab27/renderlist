@@ -20,7 +20,7 @@ export default {
       color: '',
       items: [ //array!
         {id: '001', type: 'car', color: 'red'}, //object!
-        {id: '002', type: 'house', color: 'pink'},
+        {id: '002', type: 'umbrella', color: 'pink'},
         {id: '003', type: 'broom', color: 'brown'},
         {id: '004', type: 'counter', color: 'grey'},
         {id: '005', type: 'table', color: 'yellow'},
